@@ -1,0 +1,81 @@
+Write a query to calculate the average age of employees in each department.
+
+select d.name, avg(e.age)
+from employees e
+inner join departments d
+on e.department_id=d.id 
+group by d.id;
+
++------------+------------+
+| name       | avg(e.age) |
++------------+------------+
+| IT         |    37.5500 |
+| HR         |    38.4000 |
+| Finance    |    41.4500 |
+| Marketing  |    41.4000 |
+| Operations |    38.5500 |
++------------+------------+
+
+Write a query to find the department with the highest number of employees whose age is above 40.
+
+select d.name, count(e.id)
+from employees e 
+inner join departments d
+on e.department_id=d.id
+where e.age>40
+group by d.id
+order by count(e.id) desc
+limit 1
+
+
+Output:
+
+157 ms
++------------+-------------+
+| name       | count(e.id) |
++------------+-------------+
+| Operations |         101 |
++------------+-------------+
+
+Write a query to retrieve the count of employees who have in joined in last 100 days.
+select count(e.id)
+from employees e 
+where datediff(current_date,e.joining_date)<=100
+
++-------------+
+| count(e.id) |
++-------------+
+|         100 |
++-------------+
+
+
+Write a query to update the joining date of all employees in the HR department to the yesterday.
+update employees e set e.joining_date=current_date
+where exists
+(select 1 from
+departments d 
+where d.id=e.department_id
+and d.name='HR');
+
+Program did not output anything!
+
+
+Write a query to retrieve the count of employees who have in joined in last 100 days.
+
+
+update employees e set e.joining_date=current_date
+where exists
+(select 1 from
+departments d 
+where d.id=e.department_id
+and d.name='HR');
+
+select count(e.id)
+from employees e 
+where datediff(current_date,e.joining_date)<=100;
+ 
+ +-------------+
+| count(e.id) |
++-------------+
+|         280 |
++-------------+

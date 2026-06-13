@@ -1,0 +1,26 @@
+with clock_in_time as(
+  select date, resource_id, min(start_time) as clock_in_time
+  from test_de
+  where is_clock_in = 1
+  group by date, resource_id
+  ),
+ clock_out_time as(
+  select date, resource_id, max(end_time) as clock_out_time
+  from test_de
+  where is_clock_out = 1
+  group by date,resource_id
+  ),
+  total_time as(
+    select date, resource_id,
+    round(sum(julianday(end_time) - julianday(start_time)) * 24,2) as total_hours
+    from test_de
+    group by date, resource_id
+    )
+
+select t.date, t.resource_id,i.clock_in_time,o.clock_out_time, t.total_hours
+from total_time t
+inner join clock_in_time i
+on t.date=i.date and t.resource_id=i.resource_id
+inner join clock_out_time o on 
+t.date=o.date and t.resource_id=o.resource_id
+order by t.date desc
